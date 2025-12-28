@@ -10,13 +10,13 @@
 
 .dashboard-header h1 {
   margin: 0 0 0.5rem 0;
-  color: #1a237e;
+  color: #0b0b0c;
   font-size: 2rem;
 }
 
 .dashboard-header p {
   margin: 0;
-  color: #666;
+  color: #f5f0f0;
   font-size: 1.1rem;
 }
 
@@ -79,7 +79,7 @@
 }
 
 .action-icon {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .action-content {
@@ -89,13 +89,13 @@
 .action-content h3 {
   margin: 0 0 0.5rem 0;
   color: #333;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
 }
 
 .action-content p {
   margin: 0 0 0.75rem 0;
   color: #666;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
 }
 
 .action-count {

@@ -10,9 +10,7 @@ function AdminLayout() {
             <h1>Admin Panel</h1>
           </div>
           <div className="admin-actions">
-            <button className="notification-btn">
-              Notifications <span className="badge">3</span>
-            </button>
+            
             <div className="admin-user">
               <span>Admin</span>
               <button>Logout</button>

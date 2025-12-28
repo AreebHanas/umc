@@ -31,8 +31,9 @@ ChartJS.register(
 
 function Bills() {
   const dispatch = useDispatch();
-  const { bills = [], unpaidBills = [], isLoading, error } = useSelector(state => state.bills);
-  
+  const { bills = [], unpaidBills = [], isLoading, error } =
+    useSelector(state => state.bills);
+
   const [filterStatus, setFilterStatus] = useState('All');
   const [viewMode, setViewMode] = useState('table');
 
@@ -56,20 +57,29 @@ function Bills() {
     }
   };
 
-  const getTotalAmount = (billsList) => {
-    return billsList.reduce((sum, bill) => sum + parseFloat(bill.TotalAmount || 0), 0);
+  // ✅ FIX: Centralized customer name resolver
+  const getCustomerName = (bill) => {
+    return (
+      bill.CustomerName ||
+      bill.customer_name ||
+      bill.customer?.name ||
+      bill.Customer?.Name ||
+      'N/A'
+    );
   };
+
+  const getTotalAmount = (list) =>
+    list.reduce((sum, bill) => sum + Number(bill.TotalAmount || 0), 0);
 
   const paidBills = bills.filter(b => b.Status === 'Paid');
   const overdueBills = bills.filter(b => b.Status === 'Overdue');
 
-  // Chart data
   const chartData = {
     labels: bills.slice(0, 10).reverse().map(b => `Bill #${b.BillID}`),
     datasets: [
       {
         label: 'Bill Amount (LKR)',
-        data: bills.slice(0, 10).reverse().map(b => parseFloat(b.TotalAmount)),
+        data: bills.slice(0, 10).reverse().map(b => Number(b.TotalAmount)),
         borderColor: '#1976d2',
         backgroundColor: 'rgba(25, 118, 210, 0.1)',
         tension: 0.4
@@ -80,19 +90,10 @@ function Bills() {
   const chartOptions = {
     responsive: true,
     plugins: {
-      legend: {
-        position: 'top'
-      },
-      title: {
-        display: true,
-        text: 'Recent Bill Amounts'
-      }
+      legend: { position: 'top' },
+      title: { display: true, text: 'Recent Bill Amounts' }
     },
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
+    scales: { y: { beginAtZero: true } }
   };
 
   return (
@@ -111,73 +112,50 @@ function Bills() {
 
       <div className="stats-cards">
         <div className="stat-card">
-          <div className="stat-icon">Total</div>
-          <div className="stat-info">
-            <h3>{bills.length}</h3>
-            <p>Total Bills</p>
-          </div>
+          <h3>{bills.length}</h3>
+          <p>Total Bills</p>
         </div>
+
         <div className="stat-card stat-unpaid">
-          <div className="stat-icon">⏳</div>
-          <div className="stat-info">
-            <h3>{unpaidBills.length}</h3>
-            <p>Unpaid Bills</p>
-            <small>LKR {getTotalAmount(unpaidBills).toFixed(2)}</small>
-          </div>
+          <h3>{unpaidBills.length}</h3>
+          <p>Unpaid Bills</p>
+          <small>LKR {getTotalAmount(unpaidBills).toFixed(2)}</small>
         </div>
+
         <div className="stat-card stat-paid">
-          <div className="stat-icon">Paid</div>
-          <div className="stat-info">
-            <h3>{paidBills.length}</h3>
-            <p>Paid Bills</p>
-            <small>LKR {getTotalAmount(paidBills).toFixed(2)}</small>
-          </div>
+          <h3>{paidBills.length}</h3>
+          <p>Paid Bills</p>
+          <small>LKR {getTotalAmount(paidBills).toFixed(2)}</small>
         </div>
+
         <div className="stat-card stat-overdue">
-          <div className="stat-icon">Overdue</div>
-          <div className="stat-info">
-            <h3>{overdueBills.length}</h3>
-            <p>Overdue Bills</p>
-            <small>LKR {getTotalAmount(overdueBills).toFixed(2)}</small>
-          </div>
+          <h3>{overdueBills.length}</h3>
+          <p>Overdue Bills</p>
+          <small>LKR {getTotalAmount(overdueBills).toFixed(2)}</small>
         </div>
       </div>
 
       <div className="controls-bar">
         <div className="filter-buttons">
-          <button 
-            className={filterStatus === 'All' ? 'active' : ''} 
-            onClick={() => handleStatusFilter('All')}
-          >
-            All Bills
-          </button>
-          <button 
-            className={filterStatus === 'Unpaid' ? 'active' : ''} 
-            onClick={() => handleStatusFilter('Unpaid')}
-          >
-            Unpaid
-          </button>
-          <button 
-            className={filterStatus === 'Paid' ? 'active' : ''} 
-            onClick={() => handleStatusFilter('Paid')}
-          >
-            Paid
-          </button>
-          <button 
-            className={filterStatus === 'Overdue' ? 'active' : ''} 
-            onClick={() => handleStatusFilter('Overdue')}
-          >
-            Overdue
-          </button>
+          {['All', 'Unpaid', 'Paid', 'Overdue'].map(status => (
+            <button
+              key={status}
+              className={filterStatus === status ? 'active' : ''}
+              onClick={() => handleStatusFilter(status)}
+            >
+              {status}
+            </button>
+          ))}
         </div>
+
         <div className="view-toggle">
-          <button 
+          <button
             className={viewMode === 'table' ? 'active' : ''}
             onClick={() => setViewMode('table')}
           >
             Table
           </button>
-          <button 
+          <button
             className={viewMode === 'chart' ? 'active' : ''}
             onClick={() => setViewMode('chart')}
           >
@@ -196,7 +174,7 @@ function Bills() {
                 <th>Bill ID</th>
                 <th>Customer</th>
                 <th>Bill Date</th>
-                <th>Units Consumed</th>
+                <th>Units</th>
                 <th>Amount (LKR)</th>
                 <th>Due Date</th>
                 <th>Status</th>
@@ -209,16 +187,17 @@ function Bills() {
                 </tr>
               ) : (
                 bills.slice().reverse().map(bill => {
-                  const isOverdue = new Date(bill.DueDate) < new Date() && bill.Status === 'Unpaid';
+                  const isOverdue =
+                    new Date(bill.DueDate) < new Date() &&
+                    bill.Status === 'Unpaid';
+
                   return (
                     <tr key={bill.BillID} className={isOverdue ? 'overdue-row' : ''}>
-                      <td className="bill-id">#{bill.BillID}</td>
-                      <td>{bill.CustomerName || 'Unknown'}</td>
+                      <td>#{bill.BillID}</td>
+                      <td>{getCustomerName(bill)}</td>
                       <td>{new Date(bill.BillDate).toLocaleDateString()}</td>
-                      <td className="units-cell">{bill.UnitsConsumed}</td>
-                      <td className="amount-cell">
-                        LKR {parseFloat(bill.TotalAmount).toFixed(2)}
-                      </td>
+                      <td>{bill.UnitsConsumed}</td>
+                      <td>LKR {Number(bill.TotalAmount).toFixed(2)}</td>
                       <td>
                         {new Date(bill.DueDate).toLocaleDateString()}
                         {isOverdue && <span className="overdue-badge">OVERDUE</span>}
@@ -238,27 +217,6 @@ function Bills() {
       ) : (
         <div className="chart-container">
           <Line data={chartData} options={chartOptions} />
-        </div>
-      )}
-
-      {unpaidBills.length > 0 && (
-        <div className="unpaid-section">
-          <h2>Unpaid Bills Summary</h2>
-          <div className="unpaid-grid">
-            {unpaidBills.slice(0, 6).map(bill => (
-              <div key={bill.BillID} className="unpaid-card">
-                <div className="unpaid-header">
-                  <span className="bill-number">Bill #{bill.BillID}</span>
-                  <span className="bill-amount">LKR {parseFloat(bill.TotalAmount).toFixed(2)}</span>
-                </div>
-                <div className="unpaid-body">
-                  <p><strong>{bill.CustomerName}</strong></p>
-                  <p>Due: {new Date(bill.DueDate).toLocaleDateString()}</p>
-                  <p>Units: {bill.UnitsConsumed}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </div>

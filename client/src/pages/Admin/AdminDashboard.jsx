@@ -205,7 +205,7 @@ function AdminDashboard() {
         </div>
 
         <div className="stat-box stat-revenue">
-          <h3>Total Revenue</h3>
+          <h3>Total Amount</h3>
           <div className="stat-number">LKR {stats.payments.amount.toFixed(2)}</div>
           <Link to="/admin/payments" className="stat-link">View Payments →</Link>
         </div>
@@ -217,31 +217,7 @@ function AdminDashboard() {
         </div>
       </div>
 
-      <div className="admin-info">
-        <h2>Admin Information</h2>
-        <div className="info-grid">
-          <div className="info-card">
-            <h4>Security</h4>
-            <p>All passwords are encrypted using bcrypt hashing</p>
-            <p>Token-based authentication is active</p>
-          </div>
-          <div className="info-card">
-            <h4>User Roles</h4>
-            <p>4 role types: Admin, Manager, Field Officer, Cashier</p>
-            <p>Role-based access control (RBAC) is enforced</p>
-          </div>
-          <div className="info-card">
-            <h4>Database</h4>
-            <p>MySQL database with 8 tables</p>
-            <p>Automated bill generation via triggers</p>
-          </div>
-          <div className="info-card">
-            <h4>API Status</h4>
-            <p>REST API with Express.js backend</p>
-            <p>All endpoints operational</p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }
