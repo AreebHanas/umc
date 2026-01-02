@@ -127,7 +127,7 @@ function Payments() {
                 <div className="bill-card-body">
                   <div className="info-row">
                     <span>Customer:</span>
-                    <strong>{bill.CustomerName}</strong>
+                    <strong>{bill.FullName}</strong>
                   </div>
                   <div className="info-row">
                     <span>Due Date:</span>
