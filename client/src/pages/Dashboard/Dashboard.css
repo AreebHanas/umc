@@ -97,7 +97,7 @@
 }
 
 .chart-card {
-  background: white;
+  background: rgb(255, 255, 255);
   padding: clamp(1rem, 2vw, 1.5rem);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
