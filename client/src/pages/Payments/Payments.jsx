@@ -213,7 +213,7 @@ function Payments() {
                 </div>
                 <div>
                   <span>Customer:</span>
-                  <strong>{selectedBill.CustomerName}</strong>
+                  <strong>{selectedBill.FullName}</strong>
                 </div>
                 <div>
                   <span>Units:</span>
