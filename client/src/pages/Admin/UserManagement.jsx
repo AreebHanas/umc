@@ -37,7 +37,7 @@ function UserManagement() {
     setIsLoading(true);
     try {
       const response = await userService.getAllUsers();
-      setUsers(response.data);
+      setUsers(Array.isArray(response.data) ? response.data : []);
       setError(null);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to fetch users');
@@ -152,16 +152,26 @@ function UserManagement() {
     return icons[role] || 'U';
   };
 
-  const filteredUsers = filterRole === 'All' 
-    ? users 
-    : users.filter(u => u.Role === filterRole);
+  const safeUsers = Array.isArray(users) ? users : [];
+
+const normalize = (v) =>
+  v?.toString().trim().toLowerCase().replace(/\s+/g, '');
+
+const filteredUsers = filterRole === 'All'
+  ? safeUsers
+  : safeUsers.filter(
+      u => normalize(u.Role) === normalize(filterRole)
+    );
+
+
 
   const roleStats = {
-    Admin: users.filter(u => u.Role === 'Admin').length,
-    Manager: users.filter(u => u.Role === 'Manager').length,
-    FieldOfficer: users.filter(u => u.Role === 'FieldOfficer').length,
-    Cashier: users.filter(u => u.Role === 'Cashier').length
-  };
+  Admin: safeUsers.filter(u => normalize(u.Role) === 'admin').length,
+  Manager: safeUsers.filter(u => normalize(u.Role) === 'manager').length,
+  FieldOfficer: safeUsers.filter(u => normalize(u.Role) === 'fieldofficer').length,
+  Cashier: safeUsers.filter(u => normalize(u.Role) === 'cashier').length
+};
+
 
   return (
     <div className="user-management-page">

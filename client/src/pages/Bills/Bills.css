@@ -43,7 +43,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: rgb(255, 255, 255);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 2rem;
@@ -59,8 +59,8 @@
 
 .view-toggle button {
   padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  background: white;
+  border: 1px solid #f7f7f7;
+  background: #1976d2;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
@@ -68,7 +68,7 @@
 
 .view-toggle button.active {
   background: #1976d2;
-  color: white;
+  color: rgb(255, 255, 255);
   border-color: #1976d2;
 }
 
@@ -127,7 +127,7 @@
 }
 
 .chart-container {
-  background: white;
+  background: rgb(255, 255, 255);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
