@@ -25,7 +25,7 @@ function Payments() {
   useEffect(() => {
     dispatch(fetchPayments());
     dispatch(fetchUnpaidBills());
-    dispatch(fetchPaymentStats());
+    
   }, [dispatch]);
 
   useEffect(() => {
@@ -42,6 +42,7 @@ function Payments() {
       alert('Payment processed successfully! Bill marked as paid.');
     }
   }, [success, dispatch]);
+  
 
   const handlePayBill = (bill) => {
     setSelectedBill(bill);
