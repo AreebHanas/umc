@@ -14,6 +14,20 @@ export const fetchPayments = createAsyncThunk(
   }
 );
 
+export const FetchPaymentStats = createAsyncThunk(
+  'payments/fetchStats',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await fetch('http://localhost:5000/api/payments/stats');
+      if (!res.ok) throw new Error('Stats fetch failed');
+      return await res.json();
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
 export const fetchPaymentById = createAsyncThunk(
   'payments/fetchById',
   async (id, { rejectWithValue }) => {
