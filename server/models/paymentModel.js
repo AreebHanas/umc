@@ -42,6 +42,42 @@ const Payment = {
     return rows;
   },
 
+  // Get payments for a customer (all)
+  findByCustomerId: async (customerId) => {
+    const [rows] = await db.query(`
+      SELECT p.*, b.BillID, b.TotalAmount, b.Status as BillStatus, DATE(p.PaymentDate) as PaymentDay,
+             m.SerialNumber, ut.TypeName as Utility, c.FullName, u.Username as ProcessedBy
+      FROM Payments p
+      JOIN Bills b ON p.BillID = b.BillID
+      JOIN Readings r ON b.ReadingID = r.ReadingID
+      JOIN Meters m ON r.MeterID = m.MeterID
+      JOIN Customers c ON m.CustomerID = c.CustomerID
+      JOIN UtilityTypes ut ON m.UtilityTypeID = ut.UtilityTypeID
+      LEFT JOIN Users u ON p.ProcessedBy = u.UserID
+      WHERE c.CustomerID = ?
+      ORDER BY p.PaymentDate DESC
+    `, [customerId]);
+    return rows;
+  },
+
+  // Get payments for a customer filtered by year and month
+  findByCustomerIdAndMonth: async (customerId, year, month) => {
+    const [rows] = await db.query(`
+      SELECT p.*, b.BillID, b.TotalAmount, b.Status as BillStatus, DATE(p.PaymentDate) as PaymentDay,
+             m.SerialNumber, ut.TypeName as Utility, c.FullName, u.Username as ProcessedBy
+      FROM Payments p
+      JOIN Bills b ON p.BillID = b.BillID
+      JOIN Readings r ON b.ReadingID = r.ReadingID
+      JOIN Meters m ON r.MeterID = m.MeterID
+      JOIN Customers c ON m.CustomerID = c.CustomerID
+      JOIN UtilityTypes ut ON m.UtilityTypeID = ut.UtilityTypeID
+      LEFT JOIN Users u ON p.ProcessedBy = u.UserID
+      WHERE c.CustomerID = ? AND YEAR(p.PaymentDate) = ? AND MONTH(p.PaymentDate) = ?
+      ORDER BY p.PaymentDate DESC
+    `, [customerId, year, month]);
+    return rows;
+  },
+
   // Create new payment
   create: async (paymentData) => {
     const { BillID, AmountPaid, PaymentMethod, ProcessedBy } = paymentData;
@@ -104,7 +140,7 @@ const Payment = {
         FROM Payments
         WHERE PaymentDate >= DATE_SUB(NOW(), INTERVAL 30 DAY)
         GROUP BY PaymentMethod, DATE(PaymentDate)
-        ORDER BY PaymentDate DESC
+        ORDER BY PaymentDay DESC
       `);
       
       return rows;

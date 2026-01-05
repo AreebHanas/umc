@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import {
   fetchCustomers,
   createCustomer,
@@ -85,6 +86,9 @@ function Customers() {
   const filteredCustomers = filterType === 'All' 
     ? customers 
     : customers.filter(c => c.CustomerType === filterType);
+
+  const location = useLocation();
+  const prefix = location.pathname.startsWith('/admin') ? '/admin' : '';
 
   return (
     <div className="customers-page">
@@ -176,6 +180,7 @@ function Customers() {
                     <td>{new Date(customer.RegisteredDate).toLocaleDateString()}</td>
                     <td>
                       <div className="action-buttons">
+                        <Link to={`${prefix}/customers/${customer.CustomerID}`} className="btn-view">View</Link>
                         {canEdit && (
                           <button className="btn-edit" onClick={() => handleEdit(customer)}>
                             Edit

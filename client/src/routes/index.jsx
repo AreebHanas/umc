@@ -5,6 +5,7 @@ import Home from '../pages/Home/Home';
 import Login from '../pages/Auth/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import Customers from '../pages/Customers/Customers';
+import CustomerDetail from '../pages/Customers/CustomerDetail';
 import Meters from '../pages/Meters/Meters';
 import Readings from '../pages/Readings/Readings';
 import Bills from '../pages/Bills/Bills';
@@ -42,6 +43,11 @@ const AppRoutes = () => {
           <Route path="/customers" element={
             <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer']}>
               <Customers />
+            </ProtectedRoute>
+          } />
+          <Route path="/customers/:id" element={
+            <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer']}>
+              <CustomerDetail />
             </ProtectedRoute>
           } />
           
