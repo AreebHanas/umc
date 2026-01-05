@@ -53,17 +53,6 @@ function AdminLayout() {
                 Payments
               </Link>
             </div>
-            <div className="nav-section">
-              <h3>Settings</h3>
-              <Link to="/admin/reports" className="admin-nav-item">
-                <span className="icon">R</span>
-                Reports
-              </Link>
-              <Link to="/admin/settings" className="admin-nav-item">
-                <span className="icon">S</span>
-                Settings
-              </Link>
-            </div>
           </nav>
         </aside>
 
