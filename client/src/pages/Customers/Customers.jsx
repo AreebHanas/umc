@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import {
   fetchCustomers,
   createCustomer,
@@ -110,7 +111,13 @@ function Customers() {
     }
   };
 
-  
+  const filteredCustomers = filterType === 'All' 
+    ? customers 
+    : customers.filter(c => c.CustomerType === filterType);
+
+  const location = useLocation();
+  const prefix = location.pathname.startsWith('/admin') ? '/admin' : '';
+
   return (
     <div className="customers-page">
       <div className="page-header">
@@ -198,10 +205,43 @@ function Customers() {
                     )}
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredCustomers.map(customer => (
+                  <tr key={customer.CustomerID}>
+                    <td>{customer.CustomerID}</td>
+                    <td className="customer-name">{customer.FullName}</td>
+                    <td>{customer.Address}</td>
+                    <td>{customer.Phone}</td>
+                    <td>
+                      <span className={`badge badge-${customer.CustomerType.toLowerCase()}`}>
+                        {customer.CustomerType}
+                      </span>
+                    </td>
+                    <td>{new Date(customer.RegisteredDate).toLocaleDateString()}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <Link to={`${prefix}/customers/${customer.CustomerID}`} className="btn-view">View</Link>
+                        {canEdit && (
+                          <button className="btn-edit" onClick={() => handleEdit(customer)}>
+                            Edit
+                          </button>
+                        )}
+                        {canDelete && (
+                          <button className="btn-delete" onClick={() => handleDelete(customer.CustomerID)}>
+                            Delete
+                          </button>
+                        )}
+                        {!canEdit && !canDelete && (
+                          <span className="no-actions">View Only</span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
 
      

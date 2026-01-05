@@ -128,7 +128,7 @@ function Payments() {
                 <div className="bill-card-body">
                   <div className="info-row">
                     <span>Customer:</span>
-                    <strong>{bill.CustomerName}</strong>
+                    <strong>{bill.FullName}</strong>
                   </div>
                   <div className="info-row">
                     <span>Due Date:</span>
@@ -214,7 +214,7 @@ function Payments() {
                 </div>
                 <div>
                   <span>Customer:</span>
-                  <strong>{selectedBill.CustomerName}</strong>
+                  <strong>{selectedBill.FullName}</strong>
                 </div>
                 <div>
                   <span>Units:</span>

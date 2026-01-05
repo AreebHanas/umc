@@ -43,12 +43,6 @@ function AdminLayout() {
               <Link to="/admin/bills" className="admin-nav-item">Bills</Link>
               <Link to="/admin/payments" className="admin-nav-item">Payments</Link>
             </div>
-
-            <div className="nav-section">
-              <h3>Settings</h3>
-              <Link to="/admin/reports" className="admin-nav-item">Reports</Link>
-              <Link to="/admin/settings" className="admin-nav-item">Settings</Link>
-            </div>
           </nav>
         </aside>
 

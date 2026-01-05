@@ -194,7 +194,7 @@ function Bills() {
                   return (
                     <tr key={bill.BillID} className={isOverdue ? 'overdue-row' : ''}>
                       <td>#{bill.BillID}</td>
-                      <td>{getCustomerName(bill)}</td>
+                      <td>{bill.FullName || 'N/A'}</td>
                       <td>{new Date(bill.BillDate).toLocaleDateString()}</td>
                       <td>{bill.UnitsConsumed}</td>
                       <td>LKR {Number(bill.TotalAmount).toFixed(2)}</td>
