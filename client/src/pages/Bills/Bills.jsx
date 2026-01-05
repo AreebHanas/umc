@@ -6,6 +6,7 @@ import {
   fetchBillsByStatus,
   markOverdueBills
 } from '../../redux/slices/billSlice';
+import { hasPermission } from '../../utils/permissions';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -33,6 +34,11 @@ function Bills() {
   const dispatch = useDispatch();
   const { bills = [], unpaidBills = [], isLoading, error } =
     useSelector(state => state.bills);
+  const { user } = useSelector(state => state.auth);
+
+  const canMarkOverdue = hasPermission(user?.Role, 'MARK_OVERDUE');
+  const canEdit = hasPermission(user?.Role, 'EDIT_BILLS');
+  const canDelete = hasPermission(user?.Role, 'DELETE_BILLS');
 
   const [filterStatus, setFilterStatus] = useState('All');
   const [viewMode, setViewMode] = useState('table');
@@ -75,7 +81,7 @@ function Bills() {
   const overdueBills = bills.filter(b => b.Status === 'Overdue');
 
   const chartData = {
-    labels: bills.slice(0, 10).reverse().map(b => `Bill #${b.BillID}`),
+    labels: bills.slice(0, 10).reverse().map(b => `B-${String(b.BillID).padStart(4, '0')}`),
     datasets: [
       {
         label: 'Bill Amount (LKR)',
@@ -103,9 +109,11 @@ function Bills() {
           <h1>Bills Management</h1>
           <p>Track and manage utility bills</p>
         </div>
-        <button className="btn-warning" onClick={handleMarkOverdue}>
-          Mark Overdue Bills
-        </button>
+        {canMarkOverdue && (
+          <button className="btn-warning" onClick={handleMarkOverdue}>
+            Mark Overdue Bills
+          </button>
+        )}
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -140,7 +148,7 @@ function Bills() {
           {['All', 'Unpaid', 'Paid', 'Overdue'].map(status => (
             <button
               key={status}
-              className={filterStatus === status ? 'active' : ''}
+              className={`btn-filter ${filterStatus === status ? 'active' : ''}`}
               onClick={() => handleStatusFilter(status)}
             >
               {status}
@@ -150,13 +158,13 @@ function Bills() {
 
         <div className="view-toggle">
           <button
-            className={viewMode === 'table' ? 'active' : ''}
+            className={`btn-filter ${viewMode === 'table' ? 'active' : ''}`}
             onClick={() => setViewMode('table')}
           >
             Table
           </button>
           <button
-            className={viewMode === 'chart' ? 'active' : ''}
+            className={`btn-filter ${viewMode === 'chart' ? 'active' : ''}`}
             onClick={() => setViewMode('chart')}
           >
             Chart
@@ -193,7 +201,7 @@ function Bills() {
 
                   return (
                     <tr key={bill.BillID} className={isOverdue ? 'overdue-row' : ''}>
-                      <td>#{bill.BillID}</td>
+                      <td>B-{String(bill.BillID).padStart(4, '0')}</td>
                       <td>{bill.FullName || 'N/A'}</td>
                       <td>{new Date(bill.BillDate).toLocaleDateString()}</td>
                       <td>{bill.UnitsConsumed}</td>

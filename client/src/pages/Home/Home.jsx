@@ -15,37 +15,37 @@ function Home() {
 
       <div className="features-grid">
         <div className="feature-card">
-          <div className="feature-icon">👥</div>
+          <div className="feature-icon">○</div>
           <h3>Customer Management</h3>
           <p>Manage household, business, and government customers</p>
         </div>
 
         <div className="feature-card">
-          <div className="feature-icon">⚡</div>
+          <div className="feature-icon">○</div>
           <h3>Meter Tracking</h3>
           <p>Monitor meters for electricity, water, and gas utilities</p>
         </div>
 
         <div className="feature-card">
-          <div className="feature-icon">📊</div>
+          <div className="feature-icon">○</div>
           <h3>Reading Records</h3>
           <p>Record meter readings and auto-generate bills</p>
         </div>
 
         <div className="feature-card">
-          <div className="feature-icon">💰</div>
+          <div className="feature-icon">○</div>
           <h3>Billing System</h3>
           <p>Automated billing with tariff calculations</p>
         </div>
 
         <div className="feature-card">
-          <div className="feature-icon">💳</div>
+          <div className="feature-icon">○</div>
           <h3>Payment Processing</h3>
           <p>Track payments via cash, card, or online methods</p>
         </div>
 
         <div className="feature-card">
-          <div className="feature-icon">📈</div>
+          <div className="feature-icon">○</div>
           <h3>Reports & Analytics</h3>
           <p>View unpaid bills, payment stats, and more</p>
         </div>

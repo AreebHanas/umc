@@ -2,6 +2,7 @@ import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { logout } from '../../redux/slices/authSlice';
+import { hasPermission } from '../../utils/permissions';
 import './DashboardLayout.css';
 
 function DashboardLayout() {
@@ -15,19 +16,20 @@ function DashboardLayout() {
     navigate('/login');
   };
 
-  // Role-based menu items
+  // Permission-based menu items (menu visibility follows `permissions.js`)
   const menuItems = [
-    { path: '/dashboard', icon: 'D', label: 'Dashboard', roles: ['Admin', 'Manager', 'FieldOfficer', 'Cashier'] },
-    { path: '/customers', icon: 'C', label: 'Customers', roles: ['Admin', 'Manager', 'FieldOfficer'] },
-    { path: '/meters', icon: 'M', label: 'Meters', roles: ['Admin', 'Manager', 'FieldOfficer'] },
-    { path: '/readings', icon: 'R', label: 'Readings', roles: ['Admin', 'Manager', 'FieldOfficer'] },
-    { path: '/bills', icon: 'B', label: 'Bills', roles: ['Admin', 'Manager', 'Cashier'] },
-    { path: '/payments', icon: 'P', label: 'Payments', roles: ['Admin', 'Manager', 'Cashier'] },
+    { path: '/dashboard', icon: 'D', label: 'Dashboard' },
+    { path: '/customers', icon: 'C', label: 'Customers', permission: 'VIEW_CUSTOMERS' },
+    { path: '/meters', icon: 'M', label: 'Meters', permission: 'VIEW_METERS' },
+    { path: '/readings', icon: 'R', label: 'Readings', permission: 'VIEW_READINGS' },
+    { path: '/bills', icon: 'B', label: 'Bills', permission: 'VIEW_BILLS' },
+    { path: '/payments', icon: 'P', label: 'Payments', permission: 'VIEW_PAYMENTS' },
   ];
 
-  const visibleMenuItems = menuItems.filter(item => 
-    item.roles.includes(user?.Role)
-  );
+  const visibleMenuItems = menuItems.filter(item => {
+    if (!item.permission) return true; // always show
+    return hasPermission(user?.Role, item.permission);
+  });
 
   const getRoleBadgeClass = (role) => {
     const roleClasses = {

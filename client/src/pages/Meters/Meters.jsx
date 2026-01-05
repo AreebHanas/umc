@@ -8,12 +8,18 @@ import {
   deleteMeter
 } from '../../redux/slices/meterSlice';
 import { fetchCustomers } from '../../redux/slices/customerSlice';
+import { hasPermission } from '../../utils/permissions';
 import './Meters.css';
 
 function Meters() {
   const dispatch = useDispatch();
   const { meters, isLoading, error, success } = useSelector(state => state.meters);
   const { customers = [] } = useSelector(state => state.customers);
+  const { user } = useSelector(state => state.auth);
+
+  const canCreate = hasPermission(user?.Role, 'CREATE_METERS');
+  const canEdit = hasPermission(user?.Role, 'EDIT_METERS');
+  const canDelete = hasPermission(user?.Role, 'DELETE_METERS');
   
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -110,9 +116,11 @@ function Meters() {
           <h1>Meter Management</h1>
           <p>Track and manage utility meters</p>
         </div>
-        <button className="btn-primary" onClick={handleCreate}>
-          <span>+</span> Install Meter
-        </button>
+        {canCreate && (
+          <button className="btn-create" onClick={handleCreate}>
+            <span>+</span> Install Meter
+          </button>
+        )}
       </div>
 
       {success && <div className="alert alert-success">Operation successful</div>}
@@ -205,12 +213,19 @@ function Meters() {
                   </div>
                 </div>
                 <div className="meter-actions">
-                  <button className="btn-edit" onClick={() => handleEdit(meter)}>
-                    Edit
-                  </button>
-                  <button className="btn-delete" onClick={() => handleDelete(meter.MeterID)}>
-                    Delete
-                  </button>
+                  {canEdit && (
+                    <button className="btn-edit" onClick={() => handleEdit(meter)}>
+                      Edit
+                    </button>
+                  )}
+                  {canDelete && (
+                    <button className="btn-delete" onClick={() => handleDelete(meter.MeterID)}>
+                      Delete
+                    </button>
+                  )}
+                  {!canEdit && !canDelete && (
+                    <span className="no-actions">View Only</span>
+                  )}
                 </div>
               </div>
             ))
@@ -285,11 +300,11 @@ function Meters() {
                   <option value="Suspended">Suspended</option>
                 </select>
               </div>
-              <div className="modal-actions">
+              <div className="btn-actions">
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary">
+                <button type="submit" className="btn-create">
                   {editMode ? 'Update Meter' : 'Install Meter'}
                 </button>
               </div>

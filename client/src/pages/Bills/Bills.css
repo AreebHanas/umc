@@ -4,20 +4,7 @@
   margin: 0 auto;
 }
 
-.btn-warning {
-  background: #ff9800;
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-.btn-warning:hover {
-  background: #f57c00;
-}
+/* Warning button style moved to index.css as btn-warning */
 
 .stat-unpaid {
   border-left: 4px solid #ff9800;
@@ -57,20 +44,7 @@
   gap: 0.5rem;
 }
 
-.view-toggle button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #f7f7f7;
-  background: #1976d2;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.view-toggle button.active {
-  background: #1976d2;
-  color: rgb(255, 255, 255);
-  border-color: #1976d2;
-}
+/* View toggle buttons now use btn-filter from index.css */
 
 .bill-id {
   font-weight: 700;

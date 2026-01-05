@@ -61,9 +61,31 @@ const Bill = {
     return rows;
   },
 
-  // Get unpaid bills (using view)
+  // Get unpaid bills
   findUnpaid: async () => {
-    const [rows] = await db.query('SELECT * FROM View_UnpaidBills');
+    const [rows] = await db.query(`
+      SELECT 
+        b.BillID, 
+        b.ReadingID, 
+        b.BillDate, 
+        b.UnitsConsumed, 
+        b.TotalAmount, 
+        b.DueDate, 
+        b.Status,
+        c.CustomerID,
+        c.FullName,
+        c.Phone,
+        ut.TypeName AS Utility,
+        m.SerialNumber,
+        DATEDIFF(CURDATE(), b.DueDate) AS DaysOverdue
+      FROM Bills b
+      JOIN Readings r ON b.ReadingID = r.ReadingID
+      JOIN Meters m ON r.MeterID = m.MeterID
+      JOIN Customers c ON m.CustomerID = c.CustomerID
+      JOIN UtilityTypes ut ON m.UtilityTypeID = ut.UtilityTypeID
+      WHERE b.Status = 'Unpaid'
+      ORDER BY b.DueDate ASC
+    `);
     return rows;
   },
 

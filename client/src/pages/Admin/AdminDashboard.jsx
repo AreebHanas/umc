@@ -73,7 +73,6 @@ function AdminDashboard() {
         <h2>Quick Actions</h2>
         <div className="action-grid">
           <Link to="/admin/users" className="action-card action-users">
-            <div className="action-icon">Users</div>
             <div className="action-content">
               <h3>Manage Users</h3>
               <p>Create and manage system users</p>
@@ -82,7 +81,6 @@ function AdminDashboard() {
           </Link>
 
           <Link to="/admin/customers" className="action-card action-customers">
-            <div className="action-icon">Customers</div>
             <div className="action-content">
               <h3>All Customers</h3>
               <p>View and manage all customers</p>
@@ -91,7 +89,6 @@ function AdminDashboard() {
           </Link>
 
           <Link to="/admin/meters" className="action-card action-meters">
-            <div className="action-icon">Meters</div>
             <div className="action-content">
               <h3>All Meters</h3>
               <p>Monitor all utility meters</p>
@@ -100,7 +97,6 @@ function AdminDashboard() {
           </Link>
 
           <Link to="/admin/bills" className="action-card action-bills">
-            <div className="action-icon">Bills</div>
             <div className="action-content">
               <h3>All Bills</h3>
               <p>View billing information</p>
@@ -109,20 +105,10 @@ function AdminDashboard() {
           </Link>
 
           <Link to="/admin/payments" className="action-card action-payments">
-            <div className="action-icon">Payments</div>
             <div className="action-content">
               <h3>All Payments</h3>
               <p>Track payment transactions</p>
               <span className="action-count">LKR {stats.payments.amount.toFixed(2)}</span>
-            </div>
-          </Link>
-
-          <Link to="/admin/reports" className="action-card action-reports">
-            <div className="action-icon">Reports</div>
-            <div className="action-content">
-              <h3>Reports</h3>
-              <p>Generate system reports</p>
-              <span className="action-count">Coming Soon</span>
             </div>
           </Link>
         </div>

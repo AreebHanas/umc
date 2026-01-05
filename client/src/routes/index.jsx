@@ -39,14 +39,14 @@ const AppRoutes = () => {
         }>
           <Route path="/dashboard" element={<Dashboard />} />
           
-          {/* Customers - Admin, Manager, FieldOfficer */}
+          {/* Customers - allow Cashier as well (remove Admin/Manager-only restriction) */}
           <Route path="/customers" element={
-            <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer', 'Cashier']}>
               <Customers />
             </ProtectedRoute>
           } />
           <Route path="/customers/:id" element={
-            <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer']}>
+            <ProtectedRoute allowedRoles={['Admin', 'Manager', 'FieldOfficer', 'Cashier']}>
               <CustomerDetail />
             </ProtectedRoute>
           } />
@@ -89,6 +89,7 @@ const AppRoutes = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/customers" element={<Customers />} />
+          <Route path="/admin/customers/:id" element={<CustomerDetail />} />
           <Route path="/admin/readings" element={<Readings />} />
           <Route path="/admin/meters" element={<Meters />} />
           <Route path="/admin/bills" element={<Bills />} />

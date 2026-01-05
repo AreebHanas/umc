@@ -36,6 +36,12 @@ function Customers() {
   const canDelete = hasPermission(user?.Role, 'DELETE_CUSTOMERS');
 
   useEffect(() => {
+    console.log('Permission debug - user:', user);
+    console.log('Permission debug - Role:', user?.Role);
+    console.log('Permission debug - canCreate, canEdit, canDelete:', canCreate, canEdit, canDelete);
+  }, [user, canCreate, canEdit, canDelete]);
+
+  useEffect(() => {
     dispatch(fetchCustomers());
   }, [dispatch]);
 
@@ -111,9 +117,7 @@ function Customers() {
     }
   };
 
-  const filteredCustomers = filterType === 'All' 
-    ? customers 
-    : customers.filter(c => c.CustomerType === filterType);
+  // `filteredCustomers` is computed via useMemo above; do not reassign it here.
 
   const location = useLocation();
   const prefix = location.pathname.startsWith('/admin') ? '/admin' : '';
@@ -126,7 +130,7 @@ function Customers() {
           <p>Manage customers</p>
         </div>
         {canCreate && (
-          <button className="btn-primary" onClick={handleCreate}>
+          <button className="btn-create" onClick={handleCreate}>
             + Add Customer
           </button>
         )}
@@ -148,7 +152,7 @@ function Customers() {
           {['All', 'Household', 'Business', 'Government'].map(type => (
             <button
               key={type}
-              className={filterType === type ? 'active' : ''}
+              className={`btn-filter ${filterType === type ? 'active' : ''}`}
               onClick={() => setFilterType(type)}
             >
               {type}
@@ -179,118 +183,115 @@ function Customers() {
                 <td colSpan="7">No customers found</td>
               </tr>
             ) : (
-              filteredCustomers.map(c => (
-                <tr key={c.CustomerID}>
-                  <td>{c.CustomerID}</td>
-                  <td>{c.FullName}</td>
-                  <td>{c.Address}</td>
-                  <td>{c.Phone}</td>
-                  <td>{c.CustomerType}</td>
+              filteredCustomers.map(customer => (
+                <tr key={customer.CustomerID}>
+                  <td>C-{String(customer.CustomerID).padStart(4, '0')}</td>
+                  <td className="customer-name">{customer.FullName}</td>
+                  <td>{customer.Address}</td>
+                  <td>{customer.Phone}</td>
+                  <td>{customer.CustomerType}</td>
+                  <td>{customer.RegisteredDate ? new Date(customer.RegisteredDate).toLocaleDateString() : '-'}</td>
                   <td>
-                    {c.RegisteredDate
-                      ? new Date(c.RegisteredDate).toLocaleDateString()
-                      : '-'}
-                  </td>
-                  <td>
-                    {canEdit && (
-                      <button onClick={() => handleEdit(c)}>Edit</button>
-                    )}
-                    {canDelete && (
-                      <button
-                        className="btn-delete"
-                        onClick={() => handleDelete(c.CustomerID)}
-                      >
-                        Delete
-                      </button>
-                    )}
+                    <div className="action-buttons">
+                      <Link to={`${prefix}/customers/${customer.CustomerID}`} className="btn-view">View</Link>
+                      {canEdit && (
+                        <button className="btn-edit" onClick={() => handleEdit(customer)}>
+                          Edit
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button className="btn-delete" onClick={() => handleDelete(customer.CustomerID)}>
+                          Delete
+                        </button>
+                      )}
+                      {!canEdit && !canDelete && (
+                        <span className="no-actions">View Only</span>
+                      )}
+                    </div>
                   </td>
                 </tr>
-              ) : (
-                filteredCustomers.map(customer => (
-                  <tr key={customer.CustomerID}>
-                    <td>{customer.CustomerID}</td>
-                    <td className="customer-name">{customer.FullName}</td>
-                    <td>{customer.Address}</td>
-                    <td>{customer.Phone}</td>
-                    <td>
-                      <span className={`badge badge-${customer.CustomerType.toLowerCase()}`}>
-                        {customer.CustomerType}
-                      </span>
-                    </td>
-                    <td>{new Date(customer.RegisteredDate).toLocaleDateString()}</td>
-                    <td>
-                      <div className="action-buttons">
-                        <Link to={`${prefix}/customers/${customer.CustomerID}`} className="btn-view">View</Link>
-                        {canEdit && (
-                          <button className="btn-edit" onClick={() => handleEdit(customer)}>
-                            Edit
-                          </button>
-                        )}
-                        {canDelete && (
-                          <button className="btn-delete" onClick={() => handleDelete(customer.CustomerID)}>
-                            Delete
-                          </button>
-                        )}
-                        {!canEdit && !canDelete && (
-                          <span className="no-actions">View Only</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
+              ))
+            )}
+          </tbody>
           </table>
-        </div>
       )}
 
      
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
-            <h2>{editMode ? 'Edit Customer' : 'Add Customer'}</h2>
+            <div className="modal-header">
+              <h2>{editMode ? 'Edit Customer' : 'Add Customer'}</h2>
+              <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
+            </div>
 
             <form onSubmit={handleSubmit}>
-              <input
-                required
-                placeholder="Full Name"
-                value={currentCustomer.FullName}
-                onChange={e =>
-                  setCurrentCustomer({ ...currentCustomer, FullName: e.target.value })
-                }
-              />
+              <div className="form-group">
+                <label>Full Name *</label>
+                <input
+                  required
+                  placeholder="Enter full name"
+                  minLength={3}
+                  maxLength={100}
+                  value={currentCustomer.FullName}
+                  onChange={e =>
+                    setCurrentCustomer({ ...currentCustomer, FullName: e.target.value })
+                  }
+                />
+              </div>
 
-              <textarea
-                required
-                placeholder="Address"
-                value={currentCustomer.Address}
-                onChange={e =>
-                  setCurrentCustomer({ ...currentCustomer, Address: e.target.value })
-                }
-              />
+              <div className="form-group">
+                <label>Address *</label>
+                <textarea
+                  required
+                  placeholder="Enter full address"
+                  minLength={10}
+                  maxLength={255}
+                  value={currentCustomer.Address}
+                  onChange={e =>
+                    setCurrentCustomer({ ...currentCustomer, Address: e.target.value })
+                  }
+                />
+              </div>
 
-              <input
-                placeholder="Phone"
-                value={currentCustomer.Phone}
-                onChange={e =>
-                  setCurrentCustomer({ ...currentCustomer, Phone: e.target.value })
-                }
-              />
+              <div className="form-group">
+                <label>Phone</label>
+                <input
+                  type="tel"
+                  placeholder="0771234567"
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                  maxLength={15}
+                  value={currentCustomer.Phone}
+                  onChange={e =>
+                    setCurrentCustomer({ ...currentCustomer, Phone: e.target.value })
+                  }
+                />
+              </div>
 
-              <select
-                value={currentCustomer.CustomerType}
-                onChange={e =>
-                  setCurrentCustomer({ ...currentCustomer, CustomerType: e.target.value })
-                }
-              >
-                <option>Household</option>
-                <option>Business</option>
-                <option>Government</option>
-              </select>
+              <div className="form-group">
+                <label>Customer Type *</label>
+                <select
+                  required
+                  value={currentCustomer.CustomerType}
+                  onChange={e =>
+                    setCurrentCustomer({ ...currentCustomer, CustomerType: e.target.value })
+                  }
+                >
+                  <option>Household</option>
+                  <option>Business</option>
+                  <option>Government</option>
+                </select>
+              </div>
 
-              <button type="submit">
-                {editMode ? 'Update' : 'Create'}
-              </button>
+              <div className="btn-actions">
+                <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-create">
+                  {editMode ? 'Update Customer' : 'Create Customer'}
+                </button>
+              </div>
             </form>
           </div>
         </div>

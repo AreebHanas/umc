@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { hasPermission } from '../../utils/permissions';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -35,19 +36,27 @@ ChartJS.register(
 
 function Dashboard() {
   const dispatch = useDispatch();
+  const { user } = useSelector(state => state.auth);
   const { customers = [] } = useSelector(state => state.customers);
   const { meters = [] } = useSelector(state => state.meters);
   const { readings = [] } = useSelector(state => state.readings);
   const { unpaidBills = [] } = useSelector(state => state.bills);
   const { payments = [] } = useSelector(state => state.payments);
 
+  // Check permissions for each data type
+  const canViewCustomers = hasPermission(user?.Role, 'VIEW_CUSTOMERS');
+  const canViewMeters = hasPermission(user?.Role, 'VIEW_METERS');
+  const canViewReadings = hasPermission(user?.Role, 'VIEW_READINGS');
+  const canViewBills = hasPermission(user?.Role, 'VIEW_BILLS');
+  const canViewPayments = hasPermission(user?.Role, 'VIEW_PAYMENTS');
+
   useEffect(() => {
-    dispatch(fetchCustomers());
-    dispatch(fetchMeters());
-    dispatch(fetchReadings());
-    dispatch(fetchUnpaidBills());
-    dispatch(fetchPayments());
-  }, [dispatch]);
+    if (canViewCustomers) dispatch(fetchCustomers());
+    if (canViewMeters) dispatch(fetchMeters());
+    if (canViewReadings) dispatch(fetchReadings());
+    if (canViewBills) dispatch(fetchUnpaidBills());
+    if (canViewPayments) dispatch(fetchPayments());
+  }, [dispatch, canViewCustomers, canViewMeters, canViewReadings, canViewBills, canViewPayments]);
 
   // Calculate stats
   const activeMeters = meters.filter(m => m.Status === 'Active').length;
@@ -129,126 +138,144 @@ function Dashboard() {
       </div>
 
       <div className="quick-stats">
-        <div className="stat-widget stat-customers">
-          <div className="stat-icon">Customers</div>
-          <div className="stat-details">
-            <h3>{customers.length}</h3>
-            <p>Total Customers</p>
-            <Link to="/customers" className="stat-link">View all →</Link>
+        {canViewCustomers && (
+          <div className="stat-widget stat-customers">
+            <div className="stat-icon">Customers</div>
+            <div className="stat-details">
+              <h3>{customers.length}</h3>
+              <p>Total Customers</p>
+              <Link to="/customers" className="stat-link">View all →</Link>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="stat-widget stat-meters">
-          <div className="stat-icon">Meters</div>
-          <div className="stat-details">
-            <h3>{activeMeters}</h3>
-            <p>Active Meters</p>
-            <small>{meters.length} total</small>
-            <Link to="/meters" className="stat-link">Manage →</Link>
+        {canViewMeters && (
+          <div className="stat-widget stat-meters">
+            <div className="stat-icon">Meters</div>
+            <div className="stat-details">
+              <h3>{activeMeters}</h3>
+              <p>Active Meters</p>
+              <small>{meters.length} total</small>
+              <Link to="/meters" className="stat-link">Manage →</Link>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="stat-widget stat-revenue">
-          <div className="stat-icon">Revenue</div>
-          <div className="stat-details">
-            <h3>LKR {totalRevenue.toFixed(2)}</h3>
-            <p>Total Revenue</p>
-            <small>{payments.length} payments</small>
-            <Link to="/payments" className="stat-link">View →</Link>
+        {canViewPayments && (
+          <div className="stat-widget stat-revenue">
+            <div className="stat-icon">Revenue</div>
+            <div className="stat-details">
+              <h3>LKR {totalRevenue.toFixed(2)}</h3>
+              <p>Total Revenue</p>
+              <small>{payments.length} payments</small>
+              <Link to="/payments" className="stat-link">View →</Link>
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="stat-widget stat-pending">
-          <div className="stat-icon">⏳</div>
-          <div className="stat-details">
-            <h3>LKR {pendingAmount.toFixed(2)}</h3>
-            <p>Pending Bills</p>
-            <small>{unpaidBills.length} unpaid</small>
-            <Link to="/bills" className="stat-link">View →</Link>
+        {canViewBills && (
+          <div className="stat-widget stat-pending">
+            <div className="stat-icon">Pending</div>
+            <div className="stat-details">
+              <h3>LKR {pendingAmount.toFixed(2)}</h3>
+              <p>Pending Bills</p>
+              <small>{unpaidBills.length} unpaid</small>
+              <Link to="/bills" className="stat-link">View →</Link>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="dashboard-grid">
-        <div className="chart-card">
-          <h3>Customer Distribution</h3>
-          <div className="chart-wrapper">
-            {customers.length > 0 ? (
-              <Pie data={pieData} options={chartOptions} />
-            ) : (
-              <div className="no-data">No customer data available</div>
-            )}
+        {canViewCustomers && (
+          <div className="chart-card">
+            <h3>Customer Distribution</h3>
+            <div className="chart-wrapper">
+              {customers.length > 0 ? (
+                <Pie data={pieData} options={chartOptions} />
+              ) : (
+                <div className="no-data">No customer data available</div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="chart-card">
-          <h3>Monthly Consumption</h3>
-          <div className="chart-wrapper">
-            {readings.length > 0 ? (
-              <Bar data={barData} options={chartOptions} />
-            ) : (
-              <div className="no-data">No consumption data available</div>
-            )}
+        {canViewReadings && (
+          <div className="chart-card">
+            <h3>Monthly Consumption</h3>
+            <div className="chart-wrapper">
+              {readings.length > 0 ? (
+                <Bar data={barData} options={chartOptions} />
+              ) : (
+                <div className="no-data">No consumption data available</div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="chart-card chart-wide">
-          <h3>Revenue Trend (Last 7 Days)</h3>
-          <div className="chart-wrapper">
-            {payments.length > 0 ? (
-              <Line data={lineData} options={chartOptions} />
-            ) : (
-              <div className="no-data">No revenue data available</div>
-            )}
+        {canViewPayments && (
+          <div className="chart-card chart-wide">
+            <h3>Revenue Trend (Last 7 Days)</h3>
+            <div className="chart-wrapper">
+              {payments.length > 0 ? (
+                <Line data={lineData} options={chartOptions} />
+              ) : (
+                <div className="no-data">No revenue data available</div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="activity-section">
-        <div className="activity-card">
-          <h3>Recent Readings</h3>
-          <div className="activity-list">
-            {recentReadings.length === 0 ? (
-              <div className="no-activity">No recent readings</div>
-            ) : (
-              recentReadings.slice(-5).reverse().map(reading => (
-                <div key={reading.ReadingID} className="activity-item">
-                  <div className="activity-icon">R</div>
-                  <div className="activity-info">
-                    <strong>Meter #{reading.MeterID}</strong>
-                    <p>{reading.UnitsConsumed} units consumed</p>
-                    <small>{new Date(reading.ReadingDate).toLocaleDateString()}</small>
+        {canViewReadings && (
+          <div className="activity-card">
+            <h3>Recent Readings</h3>
+            <div className="activity-list">
+              {recentReadings.length === 0 ? (
+                <div className="no-activity">No recent readings</div>
+              ) : (
+                recentReadings.slice(-5).reverse().map(reading => (
+                  <div key={reading.ReadingID} className="activity-item">
+                    <div className="activity-icon">R</div>
+                    <div className="activity-info">
+                      <strong>M-{String(reading.MeterID).padStart(4, '0')}</strong>
+                      <p>{reading.UnitsConsumed} units consumed</p>
+                      <small>{new Date(reading.ReadingDate).toLocaleDateString()}</small>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
+            <Link to="/readings" className="view-all-link">View all readings →</Link>
           </div>
-          <Link to="/readings" className="view-all-link">View all readings →</Link>
-        </div>
+        )}
 
-        <div className="activity-card">
-          <h3>Recent Payments</h3>
-          <div className="activity-list">
-            {payments.length === 0 ? (
-              <div className="no-activity">No recent payments</div>
-            ) : (
-              payments.slice(-5).reverse().map(payment => (
-                <div key={payment.PaymentID} className="activity-item">
-                  <div className="activity-icon">P</div>
-                  <div className="activity-info">
-                    <strong>Bill #{payment.BillID}</strong>
-                    <p>LKR {parseFloat(payment.AmountPaid).toFixed(2)} - {payment.PaymentMethod}</p>
-                    <small>{new Date(payment.PaymentDate).toLocaleString()}</small>
+        {canViewPayments && (
+          <div className="activity-card">
+            <h3>Recent Payments</h3>
+            <div className="activity-list">
+              {payments.length === 0 ? (
+                <div className="no-activity">No recent payments</div>
+              ) : (
+                payments.slice(-5).reverse().map(payment => (
+                  <div key={payment.PaymentID} className="activity-item">
+                    <div className="activity-icon">P</div>
+                    <div className="activity-info">
+                      <strong>B-{String(payment.BillID).padStart(4, '0')}</strong>
+                      <p>LKR {parseFloat(payment.AmountPaid).toFixed(2)} - {payment.PaymentMethod}</p>
+                      <small>{new Date(payment.PaymentDate).toLocaleString()}</small>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
+            <Link to="/payments" className="view-all-link">View all payments →</Link>
           </div>
-          <Link to="/payments" className="view-all-link">View all payments →</Link>
-        </div>
+        )}
       </div>
 
-      {unpaidBills.length > 0 && (
+      {canViewBills && unpaidBills.length > 0 && (
         <div className="alerts-section">
           <div className="alert-card alert-warning">
             <div className="alert-icon">!</div>

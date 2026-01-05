@@ -6,12 +6,18 @@ import {
   fetchLastReading
 } from '../../redux/slices/readingSlice';
 import { fetchMeters } from '../../redux/slices/meterSlice';
+import { hasPermission } from '../../utils/permissions';
 import './Readings.css';
 
 function Readings() {
   const dispatch = useDispatch();
   const { readings = [], isLoading, error, success, billGenerated } = useSelector(state => state.readings);
   const { meters = [] } = useSelector(state => state.meters);
+  const { user } = useSelector(state => state.auth);
+  
+  const canCreate = hasPermission(user?.Role, 'CREATE_READINGS');
+  const canEdit = hasPermission(user?.Role, 'EDIT_READINGS');
+  const canDelete = hasPermission(user?.Role, 'DELETE_READINGS');
   
   const [showModal, setShowModal] = useState(false);
   const [selectedMeter, setSelectedMeter] = useState('');
@@ -21,7 +27,7 @@ function Readings() {
     ReadingDate: new Date().toISOString().split('T')[0],
     PreviousReading: 0,
     CurrentReading: 0,
-    ReadingTakenBy: 1 // TODO: Get from auth context
+    ReadingTakenBy: user?.UserID || 1
   });
 
   useEffect(() => {
@@ -39,7 +45,7 @@ function Readings() {
         ReadingDate: new Date().toISOString().split('T')[0],
         PreviousReading: 0,
         CurrentReading: 0,
-        ReadingTakenBy: 1
+        ReadingTakenBy: user?.UserID || 1
       });
       // Re-fetch all readings to get complete data with joins
       dispatch(fetchReadings());
@@ -103,9 +109,11 @@ function Readings() {
           <h1>Meter Readings</h1>
           <p>Record meter readings and auto-generate bills</p>
         </div>
-        <button className="btn-primary" onClick={() => setShowModal(true)}>
-          <span>+</span> Record Reading
-        </button>
+        {canCreate && (
+          <button className="btn-create" onClick={() => setShowModal(true)}>
+            <span>+</span> Record Reading
+          </button>
+        )}
       </div>
 
       {success && billGenerated && (
@@ -173,7 +181,7 @@ function Readings() {
                   const meterInfo = getMeterInfo(reading.MeterID);
                   return (
                     <tr key={reading.ReadingID}>
-                      <td>{reading.ReadingID}</td>
+                      <td>R-{String(reading.ReadingID).padStart(4, '0')}</td>
                       <td>
                         <div className="meter-info-cell">
                           <strong>{meterInfo?.SerialNumber || 'Unknown'}</strong>
@@ -186,7 +194,7 @@ function Readings() {
                       <td className="units-consumed">
                         {(reading.CurrentReading - reading.PreviousReading).toFixed(2)}
                       </td>
-                      <td>User #{reading.ReadingTakenBy}</td>
+                      <td>{reading.Username || `U-${String(reading.ReadingTakenBy).padStart(4, '0')}`}</td>
                     </tr>
                   );
                 })
@@ -279,11 +287,11 @@ function Readings() {
                 </div>
               )}
 
-              <div className="modal-actions">
+              <div className="btn-actions">
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary">
+                <button type="submit" className="btn-create">
                   Record Reading & Generate Bill
                 </button>
               </div>

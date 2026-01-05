@@ -9,37 +9,58 @@ export const ROLES = {
 
 export const PERMISSIONS = {
   // Customer permissions
-  VIEW_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
-  CREATE_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
-  EDIT_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
+  // Admin & Manager: Full CRUD
+  // Cashier: View only (for reports)
+  // Field Officer: No access
+  VIEW_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.CASHIER],
+  CREATE_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER],
+  EDIT_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER],
   DELETE_CUSTOMERS: [ROLES.ADMIN, ROLES.MANAGER],
 
   // Meter permissions
+  // Admin & Manager: Full CRUD
+  // Field Officer: Full CRUD (install and manage meters)
+  // Cashier: No access
   VIEW_METERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
   CREATE_METERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
   EDIT_METERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
-  DELETE_METERS: [ROLES.ADMIN, ROLES.MANAGER],
+  DELETE_METERS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
 
   // Reading permissions
+  // Admin & Manager: Full CRUD
+  // Field Officer: Create only (record readings)
+  // Cashier: No access
   VIEW_READINGS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
   CREATE_READINGS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.FIELD_OFFICER],
   EDIT_READINGS: [ROLES.ADMIN, ROLES.MANAGER],
-  DELETE_READINGS: [ROLES.ADMIN],
+  DELETE_READINGS: [ROLES.ADMIN, ROLES.MANAGER],
 
   // Bill permissions
+  // Admin & Manager: Full access
+  // Cashier: View only
+  // Field Officer: No access
   VIEW_BILLS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.CASHIER],
   EDIT_BILLS: [ROLES.ADMIN, ROLES.MANAGER],
-  DELETE_BILLS: [ROLES.ADMIN],
+  DELETE_BILLS: [ROLES.ADMIN, ROLES.MANAGER],
   MARK_OVERDUE: [ROLES.ADMIN, ROLES.MANAGER],
 
   // Payment permissions
+  // Admin & Manager: Full access
+  // Cashier: Create payments (pay bills)
+  // Field Officer: No access
   VIEW_PAYMENTS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.CASHIER],
   CREATE_PAYMENTS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.CASHIER],
-  DELETE_PAYMENTS: [ROLES.ADMIN],
+  DELETE_PAYMENTS: [ROLES.ADMIN, ROLES.MANAGER],
+
+  // Report permissions
+  // Admin & Manager: All reports
+  // Cashier: Can generate customer reports
+  GENERATE_REPORTS: [ROLES.ADMIN, ROLES.MANAGER, ROLES.CASHIER],
 
   // Admin permissions
+  // Only Admin can manage users
   MANAGE_USERS: [ROLES.ADMIN],
-  VIEW_REPORTS: [ROLES.ADMIN, ROLES.MANAGER],
+  VIEW_USERS: [ROLES.ADMIN],
   SYSTEM_SETTINGS: [ROLES.ADMIN]
 };
 
@@ -50,8 +71,19 @@ export const PERMISSIONS = {
  * @returns {boolean} - True if user has permission
  */
 export const hasPermission = (userRole, permission) => {
+  // Accept either a role string or a user object containing a `Role` property
+  let role = userRole;
+  if (role && typeof role === 'object' && role.Role) {
+    role = role.Role;
+  }
+
+  if (typeof role !== 'string') return false;
+
+  const normalize = (s) => s.replace(/\s+/g, '').toLowerCase();
   const allowedRoles = PERMISSIONS[permission];
-  return allowedRoles && allowedRoles.includes(userRole);
+  if (!allowedRoles) return false;
+
+  return allowedRoles.some(ar => normalize(ar) === normalize(role));
 };
 
 /**

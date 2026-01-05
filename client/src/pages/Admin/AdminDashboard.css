@@ -39,9 +39,9 @@
 .action-card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 2rem;
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: flex-start;
   text-decoration: none;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -87,15 +87,17 @@
 }
 
 .action-content h3 {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
   color: #333;
   font-size: 1.0rem;
+  line-height: 1.4;
 }
 
 .action-content p {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 1rem 0;
   color: #666;
   font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .action-count {
@@ -117,15 +119,17 @@
 
 .overview-section {
   background: white;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .overview-section h2 {
-  margin: 0 0 1.5rem 0;
+  margin: 0 0 2rem 0;
   color: #333;
   font-size: 1.3rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f0f0f0;
 }
 
 .user-stats {
@@ -137,7 +141,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   border-radius: 8px;
   background: #f9f9f9;
 }
@@ -184,9 +188,9 @@
 
 .health-item {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   align-items: center;
-  padding: 1rem;
+  padding: 1.25rem 1.5rem;
   background: #f9f9f9;
   border-radius: 8px;
 }

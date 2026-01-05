@@ -180,7 +180,7 @@ const filteredUsers = filterRole === 'All'
           <h1>User Management</h1>
           <p>Create and manage application users</p>
         </div>
-        <button className="btn-primary" onClick={handleCreate}>
+        <button className="btn-create" onClick={handleCreate}>
           <span>+</span> Add User
         </button>
       </div>
@@ -224,31 +224,31 @@ const filteredUsers = filterRole === 'All'
           <label>Filter by Role:</label>
           <div className="filter-buttons">
             <button 
-              className={filterRole === 'All' ? 'active' : ''}
+              className={`btn-filter ${filterRole === 'All' ? 'active' : ''}`}
               onClick={() => setFilterRole('All')}
             >
               All ({users.length})
             </button>
             <button 
-              className={filterRole === 'Admin' ? 'active' : ''}
+              className={`btn-filter ${filterRole === 'Admin' ? 'active' : ''}`}
               onClick={() => setFilterRole('Admin')}
             >
               Admin ({roleStats.Admin})
             </button>
             <button 
-              className={filterRole === 'Manager' ? 'active' : ''}
+              className={`btn-filter ${filterRole === 'Manager' ? 'active' : ''}`}
               onClick={() => setFilterRole('Manager')}
             >
               Manager ({roleStats.Manager})
             </button>
             <button 
-              className={filterRole === 'FieldOfficer' ? 'active' : ''}
+              className={`btn-filter ${filterRole === 'FieldOfficer' ? 'active' : ''}`}
               onClick={() => setFilterRole('FieldOfficer')}
             >
               Officer ({roleStats.FieldOfficer})
             </button>
             <button 
-              className={filterRole === 'Cashier' ? 'active' : ''}
+              className={`btn-filter ${filterRole === 'Cashier' ? 'active' : ''}`}
               onClick={() => setFilterRole('Cashier')}
             >
               Cashier ({roleStats.Cashier})
@@ -415,11 +415,11 @@ const filteredUsers = filterRole === 'All'
                 )}
               </div>
 
-              <div className="modal-actions">
+              <div className="btn-actions">
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary" disabled={isLoading}>
+                <button type="submit" className="btn-create" disabled={isLoading}>
                   {isLoading ? 'Saving...' : editMode ? 'Update User' : 'Create User'}
                 </button>
               </div>

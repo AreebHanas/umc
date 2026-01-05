@@ -6,13 +6,16 @@ import {
   fetchPaymentStats
 } from '../../redux/slices/paymentSlice';
 import { fetchUnpaidBills } from '../../redux/slices/billSlice';
+import { hasPermission } from '../../utils/permissions';
 import './Payments.css';
 
 function Payments() {
   const dispatch = useDispatch();
   const { payments = [], stats, isLoading, error, success } = useSelector(state => state.payments);
-  const { unpaidBills = [] } = useSelector(state => state.bills);
+  const { unpaidBills = [] } = useSelector(state => state.bills);  const { user } = useSelector(state => state.auth);
   
+  const canCreate = hasPermission(user?.Role, 'CREATE_PAYMENTS');
+  const canDelete = hasPermission(user?.Role, 'DELETE_PAYMENTS');  
   const [showModal, setShowModal] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [paymentData, setPaymentData] = useState({
@@ -107,7 +110,7 @@ function Payments() {
           </div>
         </div>
         <div className="stat-card stat-pending">
-          <div className="stat-icon">⏳</div>
+          <div className="stat-icon">Pending</div>
           <div className="stat-info">
             <h3>{unpaidBills.length}</h3>
             <p>Pending Bills</p>
@@ -122,7 +125,7 @@ function Payments() {
             {unpaidBills.map(bill => (
               <div key={bill.BillID} className="bill-payment-card">
                 <div className="bill-card-header">
-                  <span className="bill-id">Bill #{bill.BillID}</span>
+                  <span className="bill-id">B-{String(bill.BillID).padStart(4, '0')}</span>
                   <span className="bill-amount">LKR {parseFloat(bill.TotalAmount).toFixed(2)}</span>
                 </div>
                 <div className="bill-card-body">
@@ -142,9 +145,16 @@ function Payments() {
                     <div className="overdue-warning">OVERDUE</div>
                   )}
                 </div>
-                <button className="btn-pay" onClick={() => handlePayBill(bill)}>
-                  Process Payment
-                </button>
+                <div className="bill-card-actions">
+                  {canCreate && (
+                    <button className="btn-create" onClick={() => handlePayBill(bill)}>
+                      Process Payment
+                    </button>
+                  )}
+                  {!canCreate && (
+                    <div className="no-actions">View Only</div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -176,8 +186,8 @@ function Payments() {
                 ) : (
                   payments.slice().reverse().map(payment => (
                     <tr key={payment.PaymentID}>
-                      <td className="payment-id">#{payment.PaymentID}</td>
-                      <td className="bill-reference">Bill #{payment.BillID}</td>
+                      <td className="payment-id">P-{String(payment.PaymentID).padStart(4, '0')}</td>
+                      <td className="bill-reference">B-{String(payment.BillID).padStart(4, '0')}</td>
                       <td>{new Date(payment.PaymentDate).toLocaleString()}</td>
                       <td className="amount-cell">
                         LKR {parseFloat(payment.AmountPaid).toFixed(2)}
@@ -187,7 +197,7 @@ function Payments() {
                           {paymentMethodIcons[payment.PaymentMethod]} {payment.PaymentMethod}
                         </span>
                       </td>
-                      <td>User #{payment.ProcessedBy}</td>
+                      <td>{payment.Username || `U-${String(payment.ProcessedBy).padStart(4, '0')}`}</td>
                     </tr>
                   ))
                 )}
@@ -210,7 +220,7 @@ function Payments() {
               <div className="summary-grid">
                 <div>
                   <span>Bill ID:</span>
-                  <strong>#{selectedBill.BillID}</strong>
+                  <strong>#{String(selectedBill.BillID).padStart(4, '0')}</strong>
                 </div>
                 <div>
                   <span>Customer:</span>
@@ -279,11 +289,11 @@ function Payments() {
                 </div>
               </div>
 
-              <div className="modal-actions">
+              <div className="btn-actions">
                 <button type="button" className="btn-secondary" onClick={() => setShowModal(false)}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary">
+                <button type="submit" className="btn-create">
                   Confirm Payment
                 </button>
               </div>

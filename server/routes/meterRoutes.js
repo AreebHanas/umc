@@ -1,13 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const meterController = require('../controllers/meterController');
+const { authenticate, authorize } = require('../middleware/auth');
 
-router.get('/', meterController.getAllMeters);
-router.get('/status/:status', meterController.getMetersByStatus);
-router.get('/customer/:customerId', meterController.getMetersByCustomerId);
-router.get('/:id', meterController.getMeterById);
-router.post('/', meterController.createMeter);
-router.put('/:id', meterController.updateMeter);
-router.delete('/:id', meterController.deleteMeter);
+// View routes: Admin, Manager, Field Officer
+router.get('/', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.getAllMeters);
+router.get('/status/:status', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.getMetersByStatus);
+router.get('/customer/:customerId', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.getMetersByCustomerId);
+router.get('/:id', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.getMeterById);
+
+// Create/Update/Delete: Admin, Manager, Field Officer
+router.post('/', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.createMeter);
+router.put('/:id', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.updateMeter);
+router.delete('/:id', authenticate, authorize(['Admin', 'Manager', 'FieldOfficer']), meterController.deleteMeter);
 
 module.exports = router;

@@ -108,9 +108,9 @@
 .admin-body {
   display: flex;
   flex: 1;
-  max-width: 1800px;
+  max-width: 100%;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .admin-sidebar {

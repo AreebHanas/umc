@@ -32,6 +32,7 @@
   transition: all 0.3s ease;
   border-left: 4px solid transparent;
   min-height: 120px;
+  /* overflow: hidden; */
 }
 
 .stat-widget:hover {
