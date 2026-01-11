@@ -184,16 +184,24 @@ exports.generateCustomerReport = async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     doc.pipe(res);
 
-    // Header block with company info / logo placeholder
-    const companyName = 'Utility Management Co.';
-    doc.rect(50, 50, 500, 60).fill('#f5f7fa').stroke();
-    doc.fillColor('#0f172a').fontSize(20).text(companyName, 60, 60);
-    doc.fontSize(10).fillColor('#475569').text('Official Customer Report', 60, 85);
-    // logo placeholder (left)
-    doc.rect(470, 58, 36, 36).stroke();
+    // Header block with company logo
+    doc.rect(50, 50, 500, 80).fill('#1976d2').stroke();
+    
+    // Draw logo (simplified meter icon)
+    const logoX = 70;
+    const logoY = 65;
+    doc.circle(logoX + 25, logoY + 25, 24).fill('#42a5f5');
+    doc.polygon([logoX + 25, logoY + 10], [logoX + 30, logoY + 20], [logoX + 20, logoY + 20]).fill('white');
+    doc.rect(logoX + 15, logoY + 25, 20, 15).fill('white');
+    doc.rect(logoX + 17, logoY + 28, 16, 6).fill('#1976d2');
+    
+    // Company name and title
+    doc.fillColor('white').fontSize(20).text('Utility Management System', 130, 68);
+    doc.fontSize(11).text('Official Customer Report', 130, 92);
+    doc.fontSize(9).text(`Generated: ${new Date().toLocaleDateString()}`, 130, 108);
 
     // Customer info box
-    const infoTop = 120;
+    const infoTop = 150;
     doc.roundedRect(50, infoTop, 500, 70, 6).stroke();
     doc.fontSize(11).fillColor('#0f172a').text(`Customer: ${customer.FullName}`, 60, infoTop + 8);
     doc.fontSize(10).fillColor('#334155').text(`Phone: ${customer.Phone || '-'}`, 60, infoTop + 26);

@@ -53,7 +53,18 @@ function DashboardLayout() {
       
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2>Utility System</h2>
+          <div className="sidebar-logo">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="30" cy="30" r="28" fill="white" opacity="0.1"/>
+              <path d="M30 10L35 20H25L30 10Z" fill="white"/>
+              <path d="M20 25H40V35C40 38.866 36.866 42 33 42H27C23.134 42 20 38.866 20 35V25Z" fill="white"/>
+              <path d="M22 28H38V32H22V28Z" fill="#1976d2"/>
+              <circle cx="25" cy="38" r="2" fill="#42a5f5"/>
+              <circle cx="35" cy="38" r="2" fill="#42a5f5"/>
+              <path d="M28 45L32 45L31 50H29L28 45Z" fill="#42a5f5"/>
+            </svg>
+            <h2>Utility System</h2>
+          </div>
           <p className="user-name">{user?.Username || 'User'}</p>
           <span className={`role-badge ${getRoleBadgeClass(user?.Role)}`}>
             {user?.Role || 'User'}

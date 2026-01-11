@@ -53,8 +53,20 @@
   background: rgba(0,0,0,0.2);
 }
 
-.sidebar-header h2 {
-  margin: 0 0 0.5rem 0;
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-logo svg {
+  flex-shrink: 0;
+}
+
+.sidebar-logo h2 {
+  margin: 0;
   color: #3498db;
   font-size: 1.3rem;
 }

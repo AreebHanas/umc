@@ -150,12 +150,25 @@ exports.generateBillReport = async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     doc.pipe(res);
 
-    // Clean header
-    doc.rect(50, 50, 500, 60).fill('#f5f7fa').stroke();
-    doc.fillColor('#0f172a').fontSize(18).text('Bill Report', 60, 60);
-    doc.fontSize(10).fillColor('#475569').text(`Bill #${bill.BillID}`, 460, 66);
+    // Company header with logo
+    doc.rect(50, 50, 500, 80).fill('#1976d2').stroke();
+    
+    // Draw logo (simplified meter icon)
+    const logoX = 70;
+    const logoY = 65;
+    doc.circle(logoX + 25, logoY + 25, 24).fill('#42a5f5');
+    doc.polygon([logoX + 25, logoY + 10], [logoX + 30, logoY + 20], [logoX + 20, logoY + 20]).fill('white');
+    doc.rect(logoX + 15, logoY + 25, 20, 15).fill('white');
+    doc.rect(logoX + 17, logoY + 28, 16, 6).fill('#1976d2');
+    
+    // Company name and title
+    doc.fillColor('white').fontSize(20).text('Utility Management System', 130, 68);
+    doc.fontSize(11).text('Official Bill Report', 130, 92);
+    doc.fontSize(9).text(`Generated: ${new Date().toLocaleDateString()}`, 130, 108);
+    
+    doc.fillColor('#0f172a').fontSize(12).text(`Bill #${bill.BillID}`, 460, 68);
 
-    let y = 130;
+    let y = 150;
     doc.roundedRect(50, y - 10, 500, 80, 6).stroke();
     doc.fontSize(11).fillColor('#0f172a').text(`Customer: ${bill.FullName || '-'}`, 60, y);
     doc.fontSize(10).fillColor('#334155').text(`Address: ${bill.Address || '-'}`, 60, y + 18, { width: 420 });
