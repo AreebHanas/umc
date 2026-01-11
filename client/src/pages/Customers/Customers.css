@@ -58,22 +58,21 @@
   border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-xl);
   box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.search-box {
-  margin-bottom: 1.5rem;
-}
-
-.search-box input {
+.filters-section input {
   width: 100%;
-  padding: 1.0rem;
+  padding: 0.875rem 1rem;
   border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
 
-.search-box input:focus {
+.filters-section input:focus {
   outline: none;
   border-color: var(--primary-color);
 }
@@ -95,12 +94,13 @@
   border-radius: var(--radius-lg);
   overflow-x: auto;
   box-shadow: var(--shadow-md);
+  -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 900px;
+  min-width: 1100px;
 }
 
 .data-table thead {
@@ -123,16 +123,12 @@
 .data-table th:nth-child(4) { width: 120px; }
 .data-table th:nth-child(5) { width: 120px; }
 .data-table th:nth-child(6) { width: 120px; }
-.data-table th:nth-child(7) { width: auto; }
+.data-table th:nth-child(7) { width: 280px; min-width: 280px; }
 
 .data-table td {
   padding: 1rem;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-secondary);
-  max-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .data-table tbody tr {
@@ -177,7 +173,8 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: nowrap;
-  white-space: nowrap;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 /* Edit and Delete button styles now in index.css */
@@ -333,15 +330,7 @@
   }
   
   .data-table {
-    min-width: 600px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-  
-  .action-buttons button {
-    width: 100%;
+    min-width: 1100px;
   }
   
   .filter-buttons {

@@ -40,7 +40,6 @@ function AdminLayout() {
 
           <div className="admin-actions">
             <div className="admin-user">
-              <span>{user?.Username}</span>
               <span className="role-badge">{user?.Role}</span>
               <button onClick={handleLogout}>Logout</button>
             </div>

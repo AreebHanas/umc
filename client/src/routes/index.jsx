@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { MainLayout, DashboardLayout, AuthLayout, AdminLayout } from '../layouts';
 import ProtectedRoute from '../components/ProtectedRoute';
-import Home from '../pages/Home/Home';
 import Login from '../pages/Auth/Login';
 import Dashboard from '../pages/Dashboard/Dashboard';
 import Customers from '../pages/Customers/Customers';
@@ -18,10 +17,8 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Routes with MainLayout (Public Pages) */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-        </Route>
+        {/* Root redirects to login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* Routes with AuthLayout (Login/Register) */}
         <Route element={<AuthLayout />}>

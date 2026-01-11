@@ -9,7 +9,6 @@ function Home() {
         <p className="subtitle">Efficient management of electricity, water, and gas utilities</p>
         <div className="hero-buttons">
           <Link to="/login" className="cta-button primary">Sign In</Link>
-          <Link to="/dashboard" className="cta-button secondary">View Dashboard</Link>
         </div>
       </div>
 
