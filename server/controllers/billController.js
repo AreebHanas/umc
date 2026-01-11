@@ -8,7 +8,6 @@ exports.getAllBills = async (req, res) => {
     const bills = await Bill.findAll();
     res.json(bills);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch bills' });
   }
 };
@@ -22,7 +21,6 @@ exports.getBillById = async (req, res) => {
     }
     res.json(bill);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch bill' });
   }
 };
@@ -33,7 +31,6 @@ exports.getBillsByCustomerId = async (req, res) => {
     const bills = await Bill.findByCustomerId(req.params.customerId);
     res.json(bills);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch bills' });
   }
 };
@@ -44,7 +41,6 @@ exports.getUnpaidBills = async (req, res) => {
     const bills = await Bill.findUnpaid();
     res.json(bills);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch unpaid bills' });
   }
 };
@@ -55,7 +51,6 @@ exports.getBillsByStatus = async (req, res) => {
     const bills = await Bill.findByStatus(req.params.status);
     res.json(bills);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch bills' });
   }
 };
@@ -81,7 +76,6 @@ exports.updateBillStatus = async (req, res) => {
       message: 'Bill status updated successfully' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to update bill status' });
   }
 };
@@ -97,7 +91,6 @@ exports.deleteBill = async (req, res) => {
 
     res.json({ message: 'Bill deleted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to delete bill' });
   }
 };
@@ -111,7 +104,6 @@ exports.markOverdueBills = async (req, res) => {
       message: `${affectedRows} bill(s) marked as overdue` 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to mark overdue bills' });
   }
 };
@@ -130,7 +122,6 @@ exports.payBill = async (req, res) => {
 
     res.status(201).json({ PaymentID: paymentId, BillID: billId, AmountPaid, PaymentMethod, message: 'Payment recorded and bill marked as paid' });
   } catch (error) {
-    console.error('Error in payBill:', error);
     res.status(500).json({ error: 'Failed to process payment for bill' });
   }
 };
@@ -202,7 +193,6 @@ exports.generateBillReport = async (req, res) => {
 
     doc.end();
   } catch (error) {
-    console.error('Error generating bill report:', error);
     res.status(500).json({ error: 'Failed to generate bill report' });
   }
 };

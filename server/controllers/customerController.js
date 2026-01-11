@@ -14,7 +14,6 @@ exports.getAllCustomers = async (req, res) => {
     const customers = await Customer.findAll();
     res.json(customers);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch customers' });
   }
 };
@@ -28,7 +27,6 @@ exports.getCustomerById = async (req, res) => {
     }
     res.json(customer);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch customer' });
   }
 };
@@ -52,7 +50,6 @@ exports.createCustomer = async (req, res) => {
       message: 'Customer created successfully' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to create customer' });
   }
 };
@@ -81,7 +78,6 @@ exports.updateCustomer = async (req, res) => {
       message: 'Customer updated successfully' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to update customer' });
   }
 };
@@ -97,7 +93,6 @@ exports.deleteCustomer = async (req, res) => {
 
     res.json({ message: 'Customer deleted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to delete customer' });
   }
 };
@@ -108,7 +103,6 @@ exports.getCustomersByType = async (req, res) => {
     const customers = await Customer.findByType(req.params.type);
     res.json(customers);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch customers' });
   }
 };
@@ -123,7 +117,6 @@ exports.searchCustomers = async (req, res) => {
     const customers = await Customer.search(search);
     res.json(customers);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to search customers' });
   }
 };
@@ -141,7 +134,6 @@ exports.getCustomerDetails = async (req, res) => {
 
     res.json({ customer, meters, bills, payments });
   } catch (error) {
-    console.error('Error in getCustomerDetails:', error);
     res.status(500).json({ error: 'Failed to fetch customer details' });
   }
 };
@@ -344,7 +336,6 @@ exports.generateCustomerReport = async (req, res) => {
 
     doc.end();
   } catch (error) {
-    console.error('Error generating customer report:', error);
     res.status(500).json({ error: 'Failed to generate report' });
   }
 };

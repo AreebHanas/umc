@@ -52,7 +52,7 @@ function AdminDashboard() {
         payments: { total: payments.data.length, amount: totalAmount }
       });
     } catch (error) {
-      console.error('Error fetching stats:', error);
+      // Error handled
     } finally {
       setIsLoading(false);
     }

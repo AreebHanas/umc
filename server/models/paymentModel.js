@@ -145,8 +145,6 @@ const Payment = {
       
       return rows;
     } catch (error) {
-      console.error('Error in getStats query:', error.message);
-      console.error('Full error:', error);
       throw error;
     }
   }

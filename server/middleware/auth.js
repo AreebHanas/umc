@@ -29,7 +29,6 @@ exports.authenticate = async (req, res, next) => {
     req.user = { UserID: user.UserID, Username: user.Username, Role: user.Role };
     next();
   } catch (err) {
-    console.error('Auth error:', err);
     res.status(500).json({ error: 'Authentication failed' });
   }
 };

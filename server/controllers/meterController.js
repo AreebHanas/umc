@@ -6,7 +6,6 @@ exports.getAllMeters = async (req, res) => {
     const meters = await Meter.findAll();
     res.json(meters);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch meters' });
   }
 };
@@ -20,7 +19,6 @@ exports.getMeterById = async (req, res) => {
     }
     res.json(meter);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch meter' });
   }
 };
@@ -31,7 +29,6 @@ exports.getMetersByCustomerId = async (req, res) => {
     const meters = await Meter.findByCustomerId(req.params.customerId);
     res.json(meters);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch meters' });
   }
 };
@@ -54,7 +51,6 @@ exports.createMeter = async (req, res) => {
       message: 'Meter created successfully' 
     });
   } catch (error) {
-    console.error(error);
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ error: 'Serial number already exists' });
     }
@@ -84,7 +80,6 @@ exports.updateMeter = async (req, res) => {
       message: 'Meter updated successfully' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to update meter' });
   }
 };
@@ -100,7 +95,6 @@ exports.deleteMeter = async (req, res) => {
 
     res.json({ message: 'Meter deleted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to delete meter' });
   }
 };
@@ -111,7 +105,6 @@ exports.getMetersByStatus = async (req, res) => {
     const meters = await Meter.findByStatus(req.params.status);
     res.json(meters);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch meters' });
   }
 };

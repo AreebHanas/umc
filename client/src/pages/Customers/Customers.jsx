@@ -36,12 +36,6 @@ function Customers() {
   const canDelete = hasPermission(user?.Role, 'DELETE_CUSTOMERS');
 
   useEffect(() => {
-    console.log('Permission debug - user:', user);
-    console.log('Permission debug - Role:', user?.Role);
-    console.log('Permission debug - canCreate, canEdit, canDelete:', canCreate, canEdit, canDelete);
-  }, [user, canCreate, canEdit, canDelete]);
-
-  useEffect(() => {
     dispatch(fetchCustomers());
   }, [dispatch]);
 
@@ -113,7 +107,7 @@ function Customers() {
       await dispatch(deleteCustomer(id)).unwrap();
       dispatch(fetchCustomers()); 
     } catch (err) {
-      console.error('Delete failed:', err);
+      // Error handled by Redux
     }
   };
 

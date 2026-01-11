@@ -13,7 +13,7 @@ const loadUserFromStorage = () => {
       };
     }
   } catch (error) {
-    console.error('Error loading auth from storage:', error);
+    // Error loading from storage
   }
   return {
     token: null,

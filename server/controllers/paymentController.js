@@ -6,7 +6,6 @@ exports.getAllPayments = async (req, res) => {
     const payments = await Payment.findAll();
     res.json(payments);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch payments' });
   }
 };
@@ -20,7 +19,6 @@ exports.getPaymentById = async (req, res) => {
     }
     res.json(payment);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch payment' });
   }
 };
@@ -31,7 +29,6 @@ exports.getPaymentsByBillId = async (req, res) => {
     const payments = await Payment.findByBillId(req.params.billId);
     res.json(payments);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch payments' });
   }
 };
@@ -55,7 +52,6 @@ exports.createPayment = async (req, res) => {
       message: 'Payment processed successfully. Bill marked as paid.' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to process payment' });
   }
 };
@@ -71,7 +67,6 @@ exports.deletePayment = async (req, res) => {
 
     res.json({ message: 'Payment deleted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to delete payment' });
   }
 };
@@ -82,8 +77,6 @@ exports.getPaymentStats = async (req, res) => {
     const stats = await Payment.getStats();
     res.json({ success: true, data: stats });
   } catch (error) {
-    console.error('Error in getPaymentStats:', error.message);
-    console.error('Full error:', error);
     res.status(500).json({ error: 'Failed to fetch payment statistics', details: error.message });
   }
 };

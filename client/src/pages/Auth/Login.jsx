@@ -17,33 +17,21 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('\n=== FORM LOGIN SUBMIT ===');
-    console.log('Credentials:', credentials);
-    
     dispatch(loginStart());
     
     try {
-      console.log('📡 Calling login API...');
       const response = await userService.login(credentials);
-      console.log('✅ Login API response:', response);
-      console.log('✅ Login API response:', response);
       
-      // Store token and user data
-      console.log('💾 Dispatching loginSuccess with:', { token: response.data.token, user: response.data.user });
       dispatch(loginSuccess({
         token: response.data.token,
         user: response.data.user
       }));
       
-      // Redirect based on role
       const role = response.data.user.Role;
-      console.log('🔀 Redirecting based on role:', role);
       
       if (role === 'Admin') {
-        console.log('➡️ Navigating to /admin');
         navigate('/admin');
       } else {
-        console.log('➡️ Navigating to /dashboard');
         navigate('/dashboard');
       }
     } catch (err) {

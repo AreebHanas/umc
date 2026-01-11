@@ -6,7 +6,6 @@ exports.getAllReadings = async (req, res) => {
     const readings = await Reading.findAll();
     res.json(readings);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch readings' });
   }
 };
@@ -20,7 +19,6 @@ exports.getReadingById = async (req, res) => {
     }
     res.json(reading);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch reading' });
   }
 };
@@ -31,7 +29,6 @@ exports.getReadingsByMeterId = async (req, res) => {
     const readings = await Reading.findByMeterId(req.params.meterId);
     res.json(readings);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch readings' });
   }
 };
@@ -45,7 +42,6 @@ exports.getLastReading = async (req, res) => {
     }
     res.json(reading);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to fetch last reading' });
   }
 };
@@ -79,7 +75,6 @@ exports.createReading = async (req, res) => {
       message: 'Reading created successfully. Bill auto-generated.' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to create reading' });
   }
 };
@@ -105,7 +100,6 @@ exports.updateReading = async (req, res) => {
       message: 'Reading updated successfully' 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to update reading' });
   }
 };
@@ -121,7 +115,6 @@ exports.deleteReading = async (req, res) => {
 
     res.json({ message: 'Reading deleted successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'Failed to delete reading' });
   }
 };
